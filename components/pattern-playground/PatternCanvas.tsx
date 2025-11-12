@@ -45,8 +45,13 @@ export const PatternCanvas = forwardRef<HTMLCanvasElement, PatternCanvasProps>(
         ref={canvasRef}
         width={width}
         height={height}
-        className="border-2 border-gray-200/60 rounded-xl shadow-modern-lg bg-white w-full h-auto max-w-full transition-all duration-300 hover:border-blue-200/60"
-        style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
+        className="rounded-lg shadow-inner bg-white w-full h-auto aspect-square transition-all duration-300 ring-1 ring-gray-200/60 group-hover:ring-2 group-hover:ring-blue-300/50"
+        style={{
+          maxWidth: '100%',
+          height: 'auto',
+          imageRendering: 'crisp-edges'
+        }}
+        aria-label="Pattern preview canvas"
       />
     );
   }
