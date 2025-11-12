@@ -82,5 +82,36 @@
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
   }
+
+  /* Mobile touch optimizations */
+  @media (hover: none) and (pointer: coarse) {
+    /* Improve tap target sizes on touch devices */
+    button, a, input[type="button"], input[type="submit"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Prevent text selection on interactive elements */
+    button, a {
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Smoother scrolling on mobile */
+    * {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  /* Prevent zoom on inputs for mobile */
+  @media screen and (max-width: 640px) {
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
 }
 
