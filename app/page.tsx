@@ -39,10 +39,18 @@ export default function Home() {
   const [exportSize, setExportSize] = useState<ExportSize>(1024);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Local state for pattern name input (not tracked in history until blur)
+  const [nameInputValue, setNameInputValue] = useState(patternState.name);
+
   // Extract pattern type, config, and name from history state
   const patternType = patternState.type;
   const config = patternState.config;
   const patternName = patternState.name;
+
+  // Sync local name input with history state when it changes (e.g., undo/redo)
+  useEffect(() => {
+    setNameInputValue(patternState.name);
+  }, [patternState.name]);
 
   // Wrapper functions for updating state
   const setPatternType = useCallback((type: PatternType) => {
@@ -53,9 +61,13 @@ export default function Home() {
     setPatternState({ type: patternState.type, config: newConfig, name: patternState.name });
   }, [setPatternState, patternState.type, patternState.name]);
 
-  const setPatternName = useCallback((name: string) => {
-    setPatternState({ type: patternState.type, config: patternState.config, name });
-  }, [setPatternState, patternState.type, patternState.config]);
+  // Only commit name changes to history when user finishes editing
+  const commitPatternName = useCallback((name: string) => {
+    const trimmedName = name.trim() || 'My Pattern';
+    if (trimmedName !== patternState.name) {
+      setPatternState({ type: patternState.type, config: patternState.config, name: trimmedName });
+    }
+  }, [setPatternState, patternState.type, patternState.config, patternState.name]);
 
   // Handle undo with toast feedback
   const handleUndo = useCallback(() => {
@@ -218,8 +230,14 @@ export default function Home() {
                   <span className="text-gray-400 hidden md:inline">•</span>
                   <input
                     type="text"
-                    value={patternName}
-                    onChange={(e) => setPatternName(e.target.value)}
+                    value={nameInputValue}
+                    onChange={(e) => setNameInputValue(e.target.value)}
+                    onBlur={(e) => commitPatternName(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.currentTarget.blur();
+                      }
+                    }}
                     maxLength={50}
                     aria-label="Pattern name"
                     title="Click to edit pattern name"
