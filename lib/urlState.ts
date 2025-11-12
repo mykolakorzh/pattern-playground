@@ -5,11 +5,13 @@ import { PatternType, PatternConfig } from "./types";
  */
 export function encodePatternToURL(
   patternType: PatternType,
-  config: PatternConfig
+  config: PatternConfig,
+  name?: string
 ): string {
   const data = {
     type: patternType,
     config: config,
+    name: name || 'Pattern',
   };
 
   const jsonString = JSON.stringify(data);
@@ -24,7 +26,7 @@ export function encodePatternToURL(
  */
 export function decodePatternFromURL(
   urlParam: string | null
-): { type: PatternType; config: PatternConfig } | null {
+): { type: PatternType; config: PatternConfig; name?: string } | null {
   if (!urlParam) return null;
 
   try {
@@ -39,6 +41,7 @@ export function decodePatternFromURL(
     return {
       type: data.type as PatternType,
       config: data.config as PatternConfig,
+      name: data.name,
     };
   } catch (error) {
     console.error("Failed to decode pattern from URL:", error);
@@ -52,9 +55,10 @@ export function decodePatternFromURL(
 export function generateShareableURL(
   patternType: PatternType,
   config: PatternConfig,
+  name?: string,
   baseURL: string = window.location.origin
 ): string {
-  const encoded = encodePatternToURL(patternType, config);
+  const encoded = encodePatternToURL(patternType, config, name);
   return `${baseURL}?pattern=${encoded}`;
 }
 
@@ -63,10 +67,11 @@ export function generateShareableURL(
  */
 export async function copyShareableURL(
   patternType: PatternType,
-  config: PatternConfig
+  config: PatternConfig,
+  name?: string
 ): Promise<boolean> {
   try {
-    const url = generateShareableURL(patternType, config);
+    const url = generateShareableURL(patternType, config, name);
     await navigator.clipboard.writeText(url);
     return true;
   } catch (error) {

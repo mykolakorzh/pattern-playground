@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { GeometricControls } from "./GeometricControls";
 import { DotsControls } from "./DotsControls";
 import { NoiseControls } from "./NoiseControls";
+import { PresetThumbnail } from "./PresetThumbnail";
 import { geometricPresets, dotsPresets, noisePresets, defaultGeometricConfig, defaultDotsConfig, defaultNoiseConfig } from "@/lib/presets";
 import { Shuffle, Download, Copy, Share2 } from "lucide-react";
 import type { ExportSize } from "@/app/page";
@@ -179,19 +180,28 @@ export function ControlPanel({
         {/* Presets Section */}
         <div>
           <h2 className="text-sm font-semibold mb-3 text-gray-900">Presets</h2>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             {getPresets().map((preset, index) => (
-              <Button
+              <button
                 key={index}
-                variant="outline"
                 onClick={() => {
                   onConfigChange(preset.config);
                   toast.success(`Preset "${preset.name}" applied!`);
                 }}
-                className="w-full justify-start text-sm"
+                aria-label={`Apply ${preset.name} preset`}
+                title={`Apply ${preset.name} preset`}
+                className="flex flex-col items-center gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
               >
-                {preset.name}
-              </Button>
+                <PresetThumbnail
+                  patternType={patternType}
+                  config={preset.config}
+                  size={80}
+                  className="shadow-sm"
+                />
+                <span className="text-xs font-medium text-gray-700 text-center leading-tight">
+                  {preset.name}
+                </span>
+              </button>
             ))}
           </div>
         </div>

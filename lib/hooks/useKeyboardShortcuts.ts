@@ -9,6 +9,8 @@ export function useKeyboardShortcuts(handlers: {
   onExport?: () => void;
   onExportSVG?: () => void;
   onCopy?: () => void;
+  onUndo?: () => void;
+  onRedo?: () => void;
 }) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -50,6 +52,21 @@ export function useKeyboardShortcuts(handlers: {
       if (event.key === " " || event.code === "Space") {
         event.preventDefault();
         handlers.onRandomize?.();
+      }
+
+      // Undo: Ctrl/Cmd + Z
+      if ((event.key === "z" || event.key === "Z") && (event.ctrlKey || event.metaKey) && !event.shiftKey) {
+        event.preventDefault();
+        handlers.onUndo?.();
+      }
+
+      // Redo: Ctrl/Cmd + Shift + Z or Ctrl/Cmd + Y
+      if (
+        ((event.key === "z" || event.key === "Z") && (event.ctrlKey || event.metaKey) && event.shiftKey) ||
+        ((event.key === "y" || event.key === "Y") && (event.ctrlKey || event.metaKey))
+      ) {
+        event.preventDefault();
+        handlers.onRedo?.();
       }
     };
 

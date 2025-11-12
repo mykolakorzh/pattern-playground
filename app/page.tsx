@@ -10,15 +10,68 @@ import { exportAsPNG, exportAsSVG, generateGeometricSVG, generateDotsSVG, copyCa
 import { GeometricPatternConfig, DotsPatternConfig } from "@/lib/types";
 import { renderPattern } from "@/lib/patterns";
 import { useKeyboardShortcuts } from "@/lib/hooks/useKeyboardShortcuts";
+import { useHistory } from "@/lib/hooks/useHistory";
 import { decodePatternFromURL, copyShareableURL } from "@/lib/urlState";
+import { Undo2, Redo2 } from "lucide-react";
 
 export type ExportSize = 512 | 1024 | 2048 | 4096;
 
+interface PatternState {
+  type: PatternType;
+  config: PatternConfig;
+  name: string;
+}
+
 export default function Home() {
-  const [patternType, setPatternType] = useState<PatternType>('geometric');
-  const [config, setConfig] = useState<PatternConfig>(defaultGeometricConfig);
+  const {
+    state: patternState,
+    setState: setPatternState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useHistory<PatternState>({
+    type: 'geometric',
+    config: defaultGeometricConfig,
+    name: 'My Pattern',
+  });
+
   const [exportSize, setExportSize] = useState<ExportSize>(1024);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Extract pattern type, config, and name from history state
+  const patternType = patternState.type;
+  const config = patternState.config;
+  const patternName = patternState.name;
+
+  // Wrapper functions for updating state
+  const setPatternType = useCallback((type: PatternType) => {
+    setPatternState({ type, config: patternState.config, name: patternState.name });
+  }, [setPatternState, patternState.config, patternState.name]);
+
+  const setConfig = useCallback((newConfig: PatternConfig) => {
+    setPatternState({ type: patternState.type, config: newConfig, name: patternState.name });
+  }, [setPatternState, patternState.type, patternState.name]);
+
+  const setPatternName = useCallback((name: string) => {
+    setPatternState({ type: patternState.type, config: patternState.config, name });
+  }, [setPatternState, patternState.type, patternState.config]);
+
+  // Handle undo with toast feedback
+  const handleUndo = useCallback(() => {
+    if (canUndo) {
+      undo();
+      toast.success('Undone');
+    }
+  }, [undo, canUndo]);
+
+  // Handle redo with toast feedback
+  const handleRedo = useCallback(() => {
+    if (canRedo) {
+      redo();
+      toast.success('Redone');
+    }
+  }, [redo, canRedo]);
 
   // Load pattern from URL on mount
   useEffect(() => {
@@ -28,11 +81,15 @@ export default function Home() {
     if (patternParam) {
       const decoded = decodePatternFromURL(patternParam);
       if (decoded) {
-        setPatternType(decoded.type);
-        setConfig(decoded.config);
+        setPatternState({
+          type: decoded.type,
+          config: decoded.config,
+          name: decoded.name || 'Shared Pattern'
+        });
         toast.success('Pattern loaded from URL!');
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle copy to clipboard
@@ -62,7 +119,7 @@ export default function Home() {
     try {
       toast.loading('Generating shareable link...', { id: 'share-url' });
 
-      const success = await copyShareableURL(patternType, config);
+      const success = await copyShareableURL(patternType, config, patternName);
 
       if (success) {
         toast.success('Shareable link copied to clipboard!', { id: 'share-url', duration: 4000 });
@@ -73,7 +130,7 @@ export default function Home() {
       console.error('Share URL failed:', error);
       toast.error('Failed to generate shareable link', { id: 'share-url' });
     }
-  }, [patternType, config]);
+  }, [patternType, config, patternName]);
 
   // Handle PNG export
   const handleExportPNG = useCallback(() => {
@@ -90,15 +147,19 @@ export default function Home() {
         throw new Error('Failed to create canvas context');
       }
 
+      // Create filename from pattern name (sanitized)
+      const sanitizedName = patternName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const filename = `${sanitizedName}-${exportSize}x${exportSize}.png`;
+
       renderPattern(ctx, exportSize, exportSize, patternType, config);
-      exportAsPNG(exportCanvas, `pattern-${patternType}-${exportSize}x${exportSize}-${Date.now()}.png`);
+      exportAsPNG(exportCanvas, filename);
 
       toast.success(`PNG exported successfully (${exportSize}x${exportSize}px)`, { id: 'export-png' });
     } catch (error) {
       console.error('Export failed:', error);
       toast.error('Failed to export PNG. Please try again.', { id: 'export-png' });
     }
-  }, [exportSize, patternType, config]);
+  }, [exportSize, patternType, config, patternName]);
 
   // Handle SVG export
   const handleExportSVG = useCallback(() => {
@@ -117,14 +178,18 @@ export default function Home() {
         throw new Error('Failed to generate SVG content');
       }
 
-      exportAsSVG(exportSize, exportSize, svgContent, `pattern-${patternType}-${exportSize}x${exportSize}-${Date.now()}.svg`);
+      // Create filename from pattern name (sanitized)
+      const sanitizedName = patternName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const filename = `${sanitizedName}-${exportSize}x${exportSize}.svg`;
+
+      exportAsSVG(exportSize, exportSize, svgContent, filename);
 
       toast.success(`SVG exported successfully (${exportSize}x${exportSize}px)`, { id: 'export-svg' });
     } catch (error) {
       console.error('Export failed:', error);
       toast.error('Failed to export SVG. Please try again.', { id: 'export-svg' });
     }
-  }, [exportSize, patternType, config]);
+  }, [exportSize, patternType, config, patternName]);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -136,6 +201,8 @@ export default function Home() {
     onExport: handleExportPNG,
     onExportSVG: handleExportSVG,
     onCopy: handleCopyToClipboard,
+    onUndo: handleUndo,
+    onRedo: handleRedo,
   });
 
   return (
@@ -143,17 +210,53 @@ export default function Home() {
       <div className="flex flex-col lg:flex-row h-screen">
         {/* Top Bar */}
         <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 md:px-6 py-3 md:py-4 z-10">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold text-gray-900">Pattern Playground</h1>
-              <p className="text-xs md:text-sm text-muted-foreground mt-1 hidden sm:block">
-                Create beautiful, customizable patterns for your designs
-              </p>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 md:gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl md:text-2xl font-bold text-gray-900">Pattern Playground</h1>
+                  <span className="text-gray-400 hidden md:inline">•</span>
+                  <input
+                    type="text"
+                    value={patternName}
+                    onChange={(e) => setPatternName(e.target.value)}
+                    maxLength={50}
+                    aria-label="Pattern name"
+                    title="Click to edit pattern name"
+                    className="text-base md:text-lg font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none transition-colors px-1 py-0.5 max-w-[200px] cursor-text"
+                    placeholder="My Pattern"
+                  />
+                </div>
+                <p className="text-xs md:text-sm text-muted-foreground mt-1 hidden sm:block">
+                  Create beautiful, customizable patterns for your designs
+                </p>
+              </div>
+              {/* Undo/Redo Buttons */}
+              <div className="hidden md:flex items-center gap-1 ml-4">
+                <button
+                  onClick={handleUndo}
+                  disabled={!canUndo}
+                  aria-label="Undo last change"
+                  className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  title="Undo (Ctrl+Z)"
+                >
+                  <Undo2 className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={handleRedo}
+                  disabled={!canRedo}
+                  aria-label="Redo last change"
+                  className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  title="Redo (Ctrl+Shift+Z)"
+                >
+                  <Redo2 className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-            <div className="hidden lg:block text-xs text-muted-foreground">
+            <div className="hidden lg:block text-xs text-muted-foreground whitespace-nowrap">
+              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+Z</kbd> Undo •{" "}
               <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">R</kbd> Randomize •{" "}
-              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+E</kbd> Export •{" "}
-              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+C</kbd> Copy
+              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+E</kbd> Export
             </div>
           </div>
         </div>
