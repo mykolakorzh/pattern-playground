@@ -40,3 +40,47 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Modern scrollbar styling */
+@layer utilities {
+  .scrollbar-modern::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+
+  .scrollbar-modern::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Modern shadow system */
+  .shadow-modern {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08),
+                0 1px 2px -1px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-modern-lg {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+                0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  }
+
+  .shadow-modern-xl {
+    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12),
+                0 10px 20px -8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Backdrop blur for glassmorphism */
+  .backdrop-glass {
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+  }
+}
+

@@ -45,7 +45,7 @@ export const PatternCanvas = forwardRef<HTMLCanvasElement, PatternCanvasProps>(
         ref={canvasRef}
         width={width}
         height={height}
-        className="border border-gray-300 rounded-lg shadow-lg bg-white w-full h-auto max-w-full"
+        className="border-2 border-gray-200/60 rounded-xl shadow-modern-lg bg-white w-full h-auto max-w-full transition-all duration-300 hover:border-blue-200/60"
         style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
       />
     );

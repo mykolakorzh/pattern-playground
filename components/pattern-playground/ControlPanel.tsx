@@ -108,30 +108,42 @@ export function ControlPanel({
   const canExportSVG = patternType === 'geometric' || (patternType === 'dots' && (config as DotsPatternConfig).style === 'grid');
 
   return (
-    <div className="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 p-4 md:p-6 overflow-y-auto h-auto lg:h-full max-h-[50vh] lg:max-h-full">
-      <div className="space-y-4 md:space-y-6">
-        {/* Pattern Type Selector */}
-        <div className="space-y-2">
-          <Label>Pattern Type</Label>
-          <div className="grid grid-cols-3 gap-2">
+    <div className="w-full lg:w-80 bg-white/95 backdrop-blur-sm border-b lg:border-b-0 lg:border-r border-gray-200/50 p-4 md:p-6 overflow-y-auto h-auto lg:h-full max-h-[50vh] lg:max-h-full scrollbar-modern shadow-modern">
+      <div className="space-y-5 md:space-y-6">
+        {/* Pattern Type Selector - Modern Segmented Control */}
+        <div className="space-y-3">
+          <Label className="text-sm font-semibold text-gray-900">Pattern Type</Label>
+          <div className="grid grid-cols-3 gap-1.5 p-1.5 bg-gray-100/80 rounded-lg">
             <Button
-              variant={patternType === 'geometric' ? 'default' : 'outline'}
+              variant={patternType === 'geometric' ? 'default' : 'ghost'}
               onClick={() => handlePatternTypeChange('geometric')}
-              className="text-xs"
+              className={`text-xs font-semibold transition-all duration-200 ${
+                patternType === 'geometric'
+                  ? 'bg-white shadow-sm text-blue-700'
+                  : 'hover:bg-white/60'
+              }`}
             >
               Geometric
             </Button>
             <Button
-              variant={patternType === 'dots' ? 'default' : 'outline'}
+              variant={patternType === 'dots' ? 'default' : 'ghost'}
               onClick={() => handlePatternTypeChange('dots')}
-              className="text-xs"
+              className={`text-xs font-semibold transition-all duration-200 ${
+                patternType === 'dots'
+                  ? 'bg-white shadow-sm text-blue-700'
+                  : 'hover:bg-white/60'
+              }`}
             >
               Dots
             </Button>
             <Button
-              variant={patternType === 'noise' ? 'default' : 'outline'}
+              variant={patternType === 'noise' ? 'default' : 'ghost'}
               onClick={() => handlePatternTypeChange('noise')}
-              className="text-xs"
+              className={`text-xs font-semibold transition-all duration-200 ${
+                patternType === 'noise'
+                  ? 'bg-white shadow-sm text-blue-700'
+                  : 'hover:bg-white/60'
+              }`}
             >
               Noise
             </Button>
@@ -139,11 +151,14 @@ export function ControlPanel({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-200/60" />
 
         {/* Controls Section */}
         <div>
-          <h2 className="text-sm font-semibold mb-4 text-gray-900">Controls</h2>
+          <h2 className="text-sm font-semibold mb-4 text-gray-900 flex items-center gap-2">
+            <span className="h-5 w-1 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></span>
+            Controls
+          </h2>
           {patternType === 'geometric' && (
             <GeometricControls
               config={config as GeometricPatternConfig}
@@ -164,22 +179,25 @@ export function ControlPanel({
           )}
         </div>
 
-        {/* Randomize Button */}
+        {/* Randomize Button - Modern Style */}
         <Button
           variant="outline"
           onClick={handleRandomize}
-          className="w-full"
+          className="w-full group relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-modern"
         >
-          <Shuffle className="mr-2 h-4 w-4" />
-          Randomize
+          <Shuffle className="mr-2 h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
+          <span className="font-semibold">Randomize</span>
         </Button>
 
         {/* Divider */}
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-200/60" />
 
-        {/* Presets Section */}
+        {/* Presets Section - Modern Card Design */}
         <div>
-          <h2 className="text-sm font-semibold mb-3 text-gray-900">Presets</h2>
+          <h2 className="text-sm font-semibold mb-4 text-gray-900 flex items-center gap-2">
+            <span className="h-5 w-1 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></span>
+            Presets
+          </h2>
           <div className="grid grid-cols-2 gap-3">
             {getPresets().map((preset, index) => (
               <button
@@ -190,15 +208,17 @@ export function ControlPanel({
                 }}
                 aria-label={`Apply ${preset.name} preset`}
                 title={`Apply ${preset.name} preset`}
-                className="flex flex-col items-center gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                className="group flex flex-col items-center gap-2.5 p-3 rounded-xl border-2 border-gray-200/60 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-sm hover:shadow-modern active:scale-95"
               >
-                <PresetThumbnail
-                  patternType={patternType}
-                  config={preset.config}
-                  size={80}
-                  className="shadow-sm"
-                />
-                <span className="text-xs font-medium text-gray-700 text-center leading-tight">
+                <div className="rounded-lg overflow-hidden ring-2 ring-gray-100 group-hover:ring-blue-200 transition-all duration-300">
+                  <PresetThumbnail
+                    patternType={patternType}
+                    config={preset.config}
+                    size={80}
+                    className="shadow-sm"
+                  />
+                </div>
+                <span className="text-xs font-semibold text-gray-700 group-hover:text-blue-700 text-center leading-tight transition-colors">
                   {preset.name}
                 </span>
               </button>
@@ -207,11 +227,14 @@ export function ControlPanel({
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-200/60" />
 
         {/* Export Section */}
         <div>
-          <h2 className="text-sm font-semibold mb-3 text-gray-900">Export</h2>
+          <h2 className="text-sm font-semibold mb-4 text-gray-900 flex items-center gap-2">
+            <span className="h-5 w-1 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full"></span>
+            Export
+          </h2>
           <div className="space-y-3">
             {/* Export Size Selector */}
             <div className="space-y-2">
@@ -235,48 +258,48 @@ export function ControlPanel({
               </p>
             </div>
 
-            {/* Export Buttons */}
-            <div className="space-y-2">
+            {/* Export Buttons - Modern Style */}
+            <div className="space-y-2.5">
               <Button
                 onClick={onExportPNG}
-                className="w-full"
+                className="w-full group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-sm hover:shadow-modern transition-all duration-300"
               >
-                <Download className="mr-2 h-4 w-4" />
-                Export as PNG
+                <Download className="mr-2 h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+                <span className="font-semibold">Export as PNG</span>
               </Button>
               {canExportSVG && (
                 <Button
                   onClick={onExportSVG}
                   variant="outline"
-                  className="w-full"
+                  className="w-full group border-2 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-300 shadow-sm hover:shadow-modern"
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  Export as SVG
+                  <Download className="mr-2 h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
+                  <span className="font-semibold">Export as SVG</span>
                 </Button>
               )}
               {!canExportSVG && (
-                <p className="text-xs text-muted-foreground text-center">
+                <p className="text-xs text-gray-500 text-center py-2 bg-gray-50 rounded-lg border border-gray-200/60">
                   SVG export not available for this pattern
                 </p>
               )}
 
               {/* Quick Actions */}
-              <div className="pt-2 space-y-2 border-t border-gray-100">
+              <div className="pt-3 space-y-2 border-t border-gray-200/60">
                 <Button
                   onClick={onCopyToClipboard}
                   variant="secondary"
-                  className="w-full"
+                  className="w-full group bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-modern"
                 >
-                  <Copy className="mr-2 h-4 w-4" />
-                  Copy to Clipboard
+                  <Copy className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                  <span className="font-semibold">Copy to Clipboard</span>
                 </Button>
                 <Button
                   onClick={onShareURL}
                   variant="secondary"
-                  className="w-full"
+                  className="w-full group bg-gradient-to-r from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border border-gray-200 transition-all duration-300 shadow-sm hover:shadow-modern"
                 >
-                  <Share2 className="mr-2 h-4 w-4" />
-                  Share Link
+                  <Share2 className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                  <span className="font-semibold">Share Link</span>
                 </Button>
               </div>
             </div>
