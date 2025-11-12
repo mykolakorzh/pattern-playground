@@ -42,7 +42,8 @@ export function PatternCanvas({
       ref={canvasRef}
       width={width}
       height={height}
-      className="border border-gray-300 rounded-lg shadow-lg bg-white"
+      className="border border-gray-300 rounded-lg shadow-lg bg-white w-full h-auto max-w-full"
+      style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
     />
   );
 }
