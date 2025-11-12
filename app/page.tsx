@@ -220,13 +220,13 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="flex flex-col lg:flex-row h-screen">
-        {/* Top Bar - Modern Glassmorphism */}
-        <div className="fixed top-0 left-0 right-0 bg-white/80 backdrop-glass border-b border-gray-200/50 px-4 md:px-6 py-3 md:py-4 z-10 shadow-modern">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 md:gap-4">
-              <div>
+        {/* Top Bar - Modern Glassmorphism with Mobile Optimization */}
+        <div className="fixed top-0 left-0 right-0 bg-white/80 backdrop-glass border-b border-gray-200/50 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 z-10 shadow-modern">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+              <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                  <h1 className="text-base sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent whitespace-nowrap">
                     Pattern Playground
                   </h1>
                   <span className="text-gray-400/60 hidden md:inline">•</span>
@@ -243,15 +243,15 @@ export default function Home() {
                     maxLength={50}
                     aria-label="Pattern name"
                     title="Click to edit pattern name"
-                    className="text-base md:text-lg font-semibold text-gray-700 bg-transparent border-b-2 border-transparent hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-all duration-200 px-2 py-0.5 max-w-[200px] cursor-text"
+                    className="hidden sm:block text-sm sm:text-base md:text-lg font-semibold text-gray-700 bg-transparent border-b-2 border-transparent hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-all duration-200 px-2 py-0.5 w-24 sm:w-32 md:max-w-[200px] cursor-text"
                     placeholder="My Pattern"
                   />
                 </div>
-                <p className="text-xs md:text-sm text-gray-600 mt-1 hidden sm:block">
-                  Create beautiful, customizable patterns for your designs
+                <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1 hidden sm:block truncate">
+                  Create beautiful, customizable patterns
                 </p>
               </div>
-              {/* Undo/Redo Buttons - Modern Style */}
+              {/* Undo/Redo Buttons - Desktop */}
               <div className="hidden md:flex items-center gap-1.5 ml-4 bg-gray-100/60 rounded-lg p-1">
                 <button
                   onClick={handleUndo}
@@ -273,6 +273,30 @@ export default function Home() {
                 </button>
               </div>
             </div>
+
+            {/* Mobile Undo/Redo - Touch Optimized */}
+            <div className="flex md:hidden items-center gap-1.5 bg-gray-100/60 rounded-lg p-1">
+              <button
+                onClick={handleUndo}
+                disabled={!canUndo}
+                aria-label="Undo"
+                className="p-2.5 rounded-md active:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-700 active:text-blue-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                title="Undo"
+              >
+                <Undo2 className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleRedo}
+                disabled={!canRedo}
+                aria-label="Redo"
+                className="p-2.5 rounded-md active:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-all text-gray-700 active:text-blue-600 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                title="Redo"
+              >
+                <Redo2 className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Keyboard Shortcuts - Desktop Only */}
             <div className="hidden lg:flex items-center gap-3 text-xs text-gray-600">
               <div className="flex items-center gap-1.5">
                 <kbd className="px-2.5 py-1.5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-md border border-gray-200 shadow-sm font-medium text-gray-700">Ctrl+Z</kbd>
@@ -292,10 +316,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="flex flex-col lg:flex-row w-full pt-16 md:pt-20 h-full">
+        {/* Main Content - Mobile Optimized Layout */}
+        <div className="flex flex-col lg:flex-row w-full pt-14 sm:pt-16 md:pt-20 h-full">
           {/* Left Sidebar - Controls */}
-          <div className="lg:max-w-xs lg:min-w-[20rem]">
+          <div className="lg:max-w-xs lg:min-w-[20rem] order-2 lg:order-1">
             <ControlPanel
               patternType={patternType}
               config={config}
@@ -310,9 +334,9 @@ export default function Home() {
             />
           </div>
 
-          {/* Canvas Area - Modern Design */}
-          <div className="flex-1 flex items-center justify-center p-4 md:p-8 lg:p-12 overflow-auto scrollbar-modern">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-modern-xl p-6 md:p-8 w-full max-w-4xl border border-gray-200/50 transition-all duration-300 hover:shadow-2xl">
+          {/* Canvas Area - Mobile Optimized */}
+          <div className="flex-1 flex items-center justify-center p-3 sm:p-4 md:p-8 lg:p-12 overflow-auto scrollbar-modern order-1 lg:order-2 min-h-[300px] sm:min-h-[400px]">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-modern-xl p-3 sm:p-4 md:p-6 lg:p-8 w-full max-w-4xl border border-gray-200/50 transition-all duration-300 hover:shadow-2xl">
               <div className="w-full aspect-square max-w-[800px] mx-auto">
                 <PatternCanvas
                   ref={canvasRef}
