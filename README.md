@@ -7,8 +7,6 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-![Pattern Playground Screenshot](https://via.placeholder.com/1200x600/1e3a8a/ffffff?text=Pattern+Playground)
-
 ## ✨ Features
 
 ### 🎯 Three Pattern Types
