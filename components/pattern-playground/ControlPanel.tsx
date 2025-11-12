@@ -1,14 +1,18 @@
 "use client"
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { PatternType, PatternConfig, GeometricPatternConfig, DotsPatternConfig, NoisePatternConfig } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { GeometricControls } from "./GeometricControls";
 import { DotsControls } from "./DotsControls";
 import { NoiseControls } from "./NoiseControls";
+import { PresetThumbnail } from "./PresetThumbnail";
 import { geometricPresets, dotsPresets, noisePresets, defaultGeometricConfig, defaultDotsConfig, defaultNoiseConfig } from "@/lib/presets";
-import { Shuffle, Download } from "lucide-react";
+import { Shuffle, Download, Copy, Share2 } from "lucide-react";
+import type { ExportSize } from "@/app/page";
 
 interface ControlPanelProps {
   patternType: PatternType;
@@ -17,6 +21,10 @@ interface ControlPanelProps {
   onConfigChange: (config: PatternConfig) => void;
   onExportPNG: () => void;
   onExportSVG: () => void;
+  onCopyToClipboard: () => void;
+  onShareURL: () => void;
+  exportSize: ExportSize;
+  onExportSizeChange: (size: ExportSize) => void;
 }
 
 export function ControlPanel({
@@ -26,6 +34,10 @@ export function ControlPanel({
   onConfigChange,
   onExportPNG,
   onExportSVG,
+  onCopyToClipboard,
+  onShareURL,
+  exportSize,
+  onExportSizeChange,
 }: ControlPanelProps) {
   const handlePatternTypeChange = (type: PatternType) => {
     onPatternTypeChange(type);
@@ -77,6 +89,7 @@ export function ControlPanel({
         });
         break;
     }
+    toast.success('Pattern randomized!');
   };
 
   const getPresets = () => {
@@ -95,8 +108,8 @@ export function ControlPanel({
   const canExportSVG = patternType === 'geometric' || (patternType === 'dots' && (config as DotsPatternConfig).style === 'grid');
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 p-6 overflow-y-auto h-full">
-      <div className="space-y-6">
+    <div className="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r border-gray-200 p-4 md:p-6 overflow-y-auto h-auto lg:h-full max-h-[50vh] lg:max-h-full">
+      <div className="space-y-4 md:space-y-6">
         {/* Pattern Type Selector */}
         <div className="space-y-2">
           <Label>Pattern Type</Label>
@@ -167,16 +180,28 @@ export function ControlPanel({
         {/* Presets Section */}
         <div>
           <h2 className="text-sm font-semibold mb-3 text-gray-900">Presets</h2>
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             {getPresets().map((preset, index) => (
-              <Button
+              <button
                 key={index}
-                variant="outline"
-                onClick={() => onConfigChange(preset.config)}
-                className="w-full justify-start text-sm"
+                onClick={() => {
+                  onConfigChange(preset.config);
+                  toast.success(`Preset "${preset.name}" applied!`);
+                }}
+                aria-label={`Apply ${preset.name} preset`}
+                title={`Apply ${preset.name} preset`}
+                className="flex flex-col items-center gap-2 p-3 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
               >
-                {preset.name}
-              </Button>
+                <PresetThumbnail
+                  patternType={patternType}
+                  config={preset.config}
+                  size={80}
+                  className="shadow-sm"
+                />
+                <span className="text-xs font-medium text-gray-700 text-center leading-tight">
+                  {preset.name}
+                </span>
+              </button>
             ))}
           </div>
         </div>
@@ -187,29 +212,74 @@ export function ControlPanel({
         {/* Export Section */}
         <div>
           <h2 className="text-sm font-semibold mb-3 text-gray-900">Export</h2>
-          <div className="space-y-2">
-            <Button
-              onClick={onExportPNG}
-              className="w-full"
-            >
-              <Download className="mr-2 h-4 w-4" />
-              Export as PNG
-            </Button>
-            {canExportSVG && (
+          <div className="space-y-3">
+            {/* Export Size Selector */}
+            <div className="space-y-2">
+              <Label>Export Resolution</Label>
+              <Select
+                value={exportSize.toString()}
+                onValueChange={(value) => onExportSizeChange(Number(value) as ExportSize)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="512">512 × 512px</SelectItem>
+                  <SelectItem value="1024">1024 × 1024px</SelectItem>
+                  <SelectItem value="2048">2048 × 2048px (2K)</SelectItem>
+                  <SelectItem value="4096">4096 × 4096px (4K)</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Higher resolutions are better for print
+              </p>
+            </div>
+
+            {/* Export Buttons */}
+            <div className="space-y-2">
               <Button
-                onClick={onExportSVG}
-                variant="outline"
+                onClick={onExportPNG}
                 className="w-full"
               >
                 <Download className="mr-2 h-4 w-4" />
-                Export as SVG
+                Export as PNG
               </Button>
-            )}
-            {!canExportSVG && (
-              <p className="text-xs text-muted-foreground text-center">
-                SVG export not available for this pattern
-              </p>
-            )}
+              {canExportSVG && (
+                <Button
+                  onClick={onExportSVG}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Export as SVG
+                </Button>
+              )}
+              {!canExportSVG && (
+                <p className="text-xs text-muted-foreground text-center">
+                  SVG export not available for this pattern
+                </p>
+              )}
+
+              {/* Quick Actions */}
+              <div className="pt-2 space-y-2 border-t border-gray-100">
+                <Button
+                  onClick={onCopyToClipboard}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy to Clipboard
+                </Button>
+                <Button
+                  onClick={onShareURL}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Link
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

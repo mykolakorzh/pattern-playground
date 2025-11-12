@@ -12,6 +12,37 @@ export function exportAsPNG(canvas: HTMLCanvasElement, filename: string = 'patte
 }
 
 /**
+ * Copies canvas image to clipboard
+ * Returns true if successful, false otherwise
+ */
+export async function copyCanvasToClipboard(canvas: HTMLCanvasElement): Promise<boolean> {
+  try {
+    // Check if Clipboard API is supported
+    if (!navigator.clipboard || !window.ClipboardItem) {
+      throw new Error('Clipboard API not supported');
+    }
+
+    // Convert canvas to blob
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, 'image/png');
+    });
+
+    if (!blob) {
+      throw new Error('Failed to create image blob');
+    }
+
+    // Create clipboard item and copy
+    const item = new ClipboardItem({ 'image/png': blob });
+    await navigator.clipboard.write([item]);
+
+    return true;
+  } catch (error) {
+    console.error('Failed to copy to clipboard:', error);
+    return false;
+  }
+}
+
+/**
  * Exports geometric pattern as SVG
  * Note: This is a simplified implementation for geometric patterns
  * Noise patterns cannot be exported as SVG
