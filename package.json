@@ -1,7 +1,7 @@
 {
   "name": "pattern-playground",
   "version": "1.0.0",
-  "description": "",
+  "description": "A powerful visual tool for creating beautiful, customizable patterns for brand and product design work. Features undo/redo, keyboard shortcuts, visual presets, and mobile-friendly modern UI.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -11,11 +11,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://local_proxy@127.0.0.1:44129/git/mykolakorzh/pattern-playground"
+    "url": "https://github.com/mykolakorzh/pattern-playground.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "pattern-generator",
+    "design-tool",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "pattern-design",
+    "geometric-patterns",
+    "noise-texture",
+    "svg-export",
+    "design-system",
+    "react",
+    "canvas-api",
+    "web-app",
+    "creative-tools"
+  ],
+  "author": "Mykola Korzh",
+  "license": "MIT",
   "dependencies": {
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-select": "^2.2.6",

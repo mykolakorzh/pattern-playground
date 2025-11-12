@@ -1,41 +1,63 @@
-# Pattern Playground
+# 🎨 Pattern Playground
 
-A visual tool for creating beautiful, customizable patterns for brand and product design work. Built with Next.js, TypeScript, and Tailwind CSS.
+> A powerful visual tool for creating beautiful, customizable patterns for brand and product design work.
 
-![Pattern Playground](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38bdf8?style=flat-square&logo=tailwind-css)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-## Features
+![Pattern Playground Screenshot](https://via.placeholder.com/1200x600/1e3a8a/ffffff?text=Pattern+Playground)
 
-### Pattern Types
+## ✨ Features
+
+### 🎯 Three Pattern Types
 
 1. **Geometric Grid**
-   - Repeating shapes: circles, squares, or triangles
-   - Customizable size, spacing, rotation
-   - Color controls for shape and background
+   - Repeating shapes: circles, squares, triangles
+   - Customizable size, spacing, and rotation
+   - Full color control for shapes and background
 
 2. **Dots Pattern**
-   - Grid-based or random scattered dots
+   - Grid-based or random scattered layouts
    - Adjustable dot size, density, and size variation
-   - Optional accent colors for visual interest
+   - Optional accent colors for added visual interest
 
 3. **Noise/Grain Texture**
    - Procedural noise generation
    - Adjustable intensity and scale
    - Color tinting for custom effects
 
-### Key Features
+### 🚀 Power User Features
 
-- **Real-time Preview**: Patterns update instantly as you adjust controls
-- **Presets**: 5 beautiful preset configurations for each pattern type
-- **Randomize**: Generate random (but aesthetically pleasing) patterns with one click
-- **Export Options**:
-  - PNG export (1024x1024px) for all pattern types
-  - SVG export for geometric and grid-based dot patterns
-- **Clean UI**: Built with shadcn/ui components for a polished experience
+- **⏮️ Undo/Redo** - Full history management with up to 50 states (Ctrl+Z / Ctrl+Shift+Z)
+- **⌨️ Keyboard Shortcuts** - Fast workflow with shortcuts for all major actions
+  - `R` or `Space` - Randomize pattern
+  - `Ctrl+E` - Export as PNG
+  - `Ctrl+C` - Copy to clipboard
+  - `Ctrl+Z` / `Ctrl+Shift+Z` - Undo/Redo
+- **🎨 Visual Preset Thumbnails** - See what each preset looks like before applying
+- **✏️ Pattern Naming** - Name your patterns for organized exports
+- **📋 Copy to Clipboard** - One-click copying for quick sharing
+- **🔗 Shareable URLs** - Share patterns via URL with Base64-encoded configurations
+- **📱 Mobile-Friendly** - Fully responsive with touch-optimized interactions
 
-## Getting Started
+### 💎 Modern UI Design
+
+- **Glassmorphism** - Frosted glass effects with backdrop blur
+- **Smooth Animations** - Delightful micro-interactions throughout
+- **Gradient Accents** - Beautiful blue-to-indigo color scheme
+- **Custom Shadows** - Multi-layer shadow system for depth
+- **Touch Optimized** - 44px minimum tap targets, active states for touch devices
+
+### 📤 Export Options
+
+- **PNG Export** - Multiple resolutions (512px to 4K)
+- **SVG Export** - Vector export for geometric and grid patterns
+- **Smart Filenames** - Exports use your custom pattern names
+- **High Resolution** - Print-ready 2K and 4K output
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -46,7 +68,7 @@ A visual tool for creating beautiful, customizable patterns for brand and produc
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/pattern-playground.git
+git clone https://github.com/mykolakorzh/pattern-playground.git
 cd pattern-playground
 ```
 
@@ -69,107 +91,161 @@ npm run build
 npm start
 ```
 
-## Usage
+## 📱 Usage
 
-1. **Select a Pattern Type**: Choose between Geometric, Dots, or Noise patterns
-2. **Adjust Controls**: Use sliders, color pickers, and dropdowns to customize your pattern
-3. **Try Presets**: Click on preset buttons for instant inspiration
-4. **Randomize**: Hit the Randomize button to generate random patterns
-5. **Export**: Download your pattern as PNG or SVG (when available)
+### Desktop
+1. Select a pattern type from the segmented control
+2. Adjust controls using sliders, color pickers, and selects
+3. Try visual preset thumbnails for instant inspiration
+4. Use keyboard shortcuts for faster workflow
+5. Export at your desired resolution (512px - 4K)
 
-## Project Structure
+### Mobile
+- Touch-optimized interface with 44px tap targets
+- Canvas appears first, controls below for better UX
+- Active states provide immediate touch feedback
+- All features available on mobile devices
+
+## 🏗️ Project Structure
 
 ```
 pattern-playground/
 ├── app/
-│   ├── globals.css          # Global styles and Tailwind config
-│   ├── layout.tsx           # Root layout
-│   └── page.tsx             # Main application page
+│   ├── globals.css              # Global styles, modern shadow system
+│   ├── layout.tsx               # Root layout with Toaster
+│   └── page.tsx                 # Main app with history management
 ├── components/
-│   ├── ui/                  # shadcn/ui components
+│   ├── ui/                      # shadcn/ui components
 │   │   ├── button.tsx
 │   │   ├── slider.tsx
 │   │   ├── select.tsx
 │   │   ├── input.tsx
-│   │   ├── label.tsx
-│   │   └── color-picker.tsx
-│   └── pattern-playground/  # Pattern-specific components
-│       ├── PatternCanvas.tsx
-│       ├── ControlPanel.tsx
+│   │   └── label.tsx
+│   └── pattern-playground/
+│       ├── PatternCanvas.tsx    # Canvas with forwardRef
+│       ├── PresetThumbnail.tsx  # Visual preset previews
+│       ├── ControlPanel.tsx     # Main control panel
 │       ├── GeometricControls.tsx
 │       ├── DotsControls.tsx
 │       └── NoiseControls.tsx
 ├── lib/
-│   ├── types.ts             # TypeScript type definitions
-│   ├── utils.ts             # Utility functions
-│   ├── presets.ts           # Pattern presets
-│   ├── export.ts            # Export utilities
-│   └── patterns/            # Pattern generation logic
+│   ├── types.ts                 # TypeScript definitions
+│   ├── utils.ts                 # Utility functions
+│   ├── presets.ts               # 15 curated presets
+│   ├── export.ts                # PNG/SVG/Clipboard export
+│   ├── urlState.ts              # Shareable URL encoding
+│   ├── hooks/
+│   │   ├── useHistory.ts        # Undo/redo history stack
+│   │   └── useKeyboardShortcuts.ts
+│   └── patterns/
 │       ├── index.ts
 │       ├── geometric.ts
 │       ├── dots.ts
 │       └── noise.ts
-└── public/                  # Static assets
+└── public/                      # Static assets
 ```
 
-## Technology Stack
+## 🛠️ Technology Stack
 
-- **Next.js 16**: React framework with App Router
-- **TypeScript**: Type-safe development
-- **Tailwind CSS**: Utility-first styling
-- **shadcn/ui**: High-quality UI components
-- **Radix UI**: Accessible component primitives
-- **file-saver**: Client-side file exports
-- **Lucide React**: Beautiful icons
+- **[Next.js 16](https://nextjs.org/)** - React framework with App Router & Turbopack
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe development
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first styling
+- **[shadcn/ui](https://ui.shadcn.com/)** - High-quality UI components
+- **[Radix UI](https://www.radix-ui.com/)** - Accessible primitives
+- **[Sonner](https://sonner.emilkowal.ski/)** - Beautiful toast notifications
+- **[Lucide React](https://lucide.dev/)** - Beautiful icons
+- **[file-saver](https://github.com/eligrey/FileSaver.js/)** - Client-side exports
 
-## Pattern Generation Details
+## 🎨 Pattern Generation
 
 ### Geometric Pattern
-Creates a tiled grid of shapes with customizable properties. Supports rotation, size, and spacing controls for endless variations.
+Creates a tiled grid of shapes (circles, squares, triangles) with full control over size, spacing, rotation, and colors. Perfect for backgrounds and brand elements.
 
 ### Dots Pattern
-Generates either grid-based or randomly scattered dots. Grid mode creates uniform patterns while random mode provides organic, scattered layouts.
+Generates either grid-based or randomly scattered dots. Grid mode creates uniform patterns while random mode provides organic, scattered layouts with optional accent colors.
 
 ### Noise/Grain
-Uses pixel manipulation to create procedural noise textures. The scale parameter controls grain size while intensity adjusts the effect strength.
+Uses pixel manipulation to create procedural noise textures. Scale controls grain size while intensity adjusts effect strength. Great for subtle textures and overlays.
 
-## Export Formats
+## 📤 Export Details
 
 ### PNG Export
-All patterns can be exported as high-resolution PNG files (1024x1024px). The export canvas is rendered at full resolution for crisp, print-ready output.
+- Multiple resolutions: 512px, 1024px, 2048px (2K), 4096px (4K)
+- High-quality rendering at full resolution
+- Smart filenames using your custom pattern names
+- Perfect for print and digital use
 
 ### SVG Export
-Geometric and grid-based dot patterns can be exported as scalable SVG files, perfect for logos and vector-based designs. Note: Noise patterns use pixel-based rendering and cannot be exported as SVG.
+- Available for geometric and grid-based dot patterns
+- Scalable vector format for logos and graphics
+- Clean, optimized SVG code
+- *Note: Noise patterns use pixel rendering and cannot be exported as SVG*
 
-## Deployment
+### Copy to Clipboard
+- One-click copying of current pattern
+- Works on modern browsers with Clipboard API
+- Instant feedback with toast notifications
+
+### Shareable URLs
+- Patterns encoded in URL with Base64
+- Includes pattern type, configuration, and name
+- Share via link, bookmark, or save for later
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `R` or `Space` | Randomize pattern |
+| `Ctrl+E` | Export as PNG |
+| `Ctrl+C` | Copy to clipboard |
+| `Ctrl+Z` | Undo |
+| `Ctrl+Shift+Z` or `Ctrl+Y` | Redo |
+
+## 🚀 Deployment
 
 ### Vercel (Recommended)
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mykolakorzh/pattern-playground)
+
 1. Push your code to GitHub
-2. Import your repository to Vercel
-3. Vercel will automatically detect Next.js and configure the build
+2. Import repository to [Vercel](https://vercel.com)
+3. Vercel auto-detects Next.js configuration
 4. Deploy!
 
 ### Other Platforms
 
-The app can be deployed to any platform that supports Next.js:
-- Netlify
-- AWS Amplify
-- Railway
-- Render
+The app deploys to any platform supporting Next.js:
+- [Netlify](https://www.netlify.com/)
+- [AWS Amplify](https://aws.amazon.com/amplify/)
+- [Railway](https://railway.app/)
+- [Render](https://render.com/)
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-## License
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-MIT License - feel free to use this project for your own purposes.
+## 📝 License
 
-## Credits
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Built with ❤️ using Next.js and shadcn/ui
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/) and [shadcn/ui](https://ui.shadcn.com/)
+- Icons by [Lucide](https://lucide.dev/)
+- Inspired by modern design tools and pattern generators
+
+## 📧 Contact
+
+Mykola Korzh - [@mykolakorzh](https://github.com/mykolakorzh)
+
+Project Link: [https://github.com/mykolakorzh/pattern-playground](https://github.com/mykolakorzh/pattern-playground)
 
 ---
 
-**Pattern Playground** - Create beautiful patterns for your designs
+**Pattern Playground** - Create beautiful patterns for your designs ✨
