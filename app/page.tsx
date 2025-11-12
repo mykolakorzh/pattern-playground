@@ -218,16 +218,18 @@ export default function Home() {
   });
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="flex flex-col lg:flex-row h-screen">
-        {/* Top Bar */}
-        <div className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 md:px-6 py-3 md:py-4 z-10">
+        {/* Top Bar - Modern Glassmorphism */}
+        <div className="fixed top-0 left-0 right-0 bg-white/80 backdrop-glass border-b border-gray-200/50 px-4 md:px-6 py-3 md:py-4 z-10 shadow-modern">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 md:gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl md:text-2xl font-bold text-gray-900">Pattern Playground</h1>
-                  <span className="text-gray-400 hidden md:inline">•</span>
+                  <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent">
+                    Pattern Playground
+                  </h1>
+                  <span className="text-gray-400/60 hidden md:inline">•</span>
                   <input
                     type="text"
                     value={nameInputValue}
@@ -241,21 +243,21 @@ export default function Home() {
                     maxLength={50}
                     aria-label="Pattern name"
                     title="Click to edit pattern name"
-                    className="text-base md:text-lg font-medium text-gray-700 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none transition-colors px-1 py-0.5 max-w-[200px] cursor-text"
+                    className="text-base md:text-lg font-semibold text-gray-700 bg-transparent border-b-2 border-transparent hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-all duration-200 px-2 py-0.5 max-w-[200px] cursor-text"
                     placeholder="My Pattern"
                   />
                 </div>
-                <p className="text-xs md:text-sm text-muted-foreground mt-1 hidden sm:block">
+                <p className="text-xs md:text-sm text-gray-600 mt-1 hidden sm:block">
                   Create beautiful, customizable patterns for your designs
                 </p>
               </div>
-              {/* Undo/Redo Buttons */}
-              <div className="hidden md:flex items-center gap-1 ml-4">
+              {/* Undo/Redo Buttons - Modern Style */}
+              <div className="hidden md:flex items-center gap-1.5 ml-4 bg-gray-100/60 rounded-lg p-1">
                 <button
                   onClick={handleUndo}
                   disabled={!canUndo}
                   aria-label="Undo last change"
-                  className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-md hover:bg-white hover:shadow-sm disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 text-gray-700 hover:text-blue-600"
                   title="Undo (Ctrl+Z)"
                 >
                   <Undo2 className="h-4 w-4" />
@@ -264,17 +266,28 @@ export default function Home() {
                   onClick={handleRedo}
                   disabled={!canRedo}
                   aria-label="Redo last change"
-                  className="p-2 rounded-md hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 rounded-md hover:bg-white hover:shadow-sm disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 text-gray-700 hover:text-blue-600"
                   title="Redo (Ctrl+Shift+Z)"
                 >
                   <Redo2 className="h-4 w-4" />
                 </button>
               </div>
             </div>
-            <div className="hidden lg:block text-xs text-muted-foreground whitespace-nowrap">
-              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+Z</kbd> Undo •{" "}
-              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">R</kbd> Randomize •{" "}
-              <kbd className="px-2 py-1 bg-gray-100 rounded border border-gray-300">Ctrl+E</kbd> Export
+            <div className="hidden lg:flex items-center gap-3 text-xs text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <kbd className="px-2.5 py-1.5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-md border border-gray-200 shadow-sm font-medium text-gray-700">Ctrl+Z</kbd>
+                <span className="text-gray-500">Undo</span>
+              </div>
+              <span className="text-gray-300">•</span>
+              <div className="flex items-center gap-1.5">
+                <kbd className="px-2.5 py-1.5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-md border border-gray-200 shadow-sm font-medium text-gray-700">R</kbd>
+                <span className="text-gray-500">Randomize</span>
+              </div>
+              <span className="text-gray-300">•</span>
+              <div className="flex items-center gap-1.5">
+                <kbd className="px-2.5 py-1.5 bg-gradient-to-br from-gray-50 to-gray-100 rounded-md border border-gray-200 shadow-sm font-medium text-gray-700">Ctrl+E</kbd>
+                <span className="text-gray-500">Export</span>
+              </div>
             </div>
           </div>
         </div>
@@ -297,9 +310,9 @@ export default function Home() {
             />
           </div>
 
-          {/* Canvas Area */}
-          <div className="flex-1 flex items-center justify-center p-4 md:p-8 overflow-auto">
-            <div className="bg-white rounded-lg shadow-xl p-4 md:p-6 w-full max-w-4xl">
+          {/* Canvas Area - Modern Design */}
+          <div className="flex-1 flex items-center justify-center p-4 md:p-8 lg:p-12 overflow-auto scrollbar-modern">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-modern-xl p-6 md:p-8 w-full max-w-4xl border border-gray-200/50 transition-all duration-300 hover:shadow-2xl">
               <div className="w-full aspect-square max-w-[800px] mx-auto">
                 <PatternCanvas
                   ref={canvasRef}
