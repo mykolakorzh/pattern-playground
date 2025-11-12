@@ -14,6 +14,9 @@ export function drawGeometricPattern(
   ctx.fillStyle = config.backgroundColor;
   ctx.fillRect(0, 0, width, height);
 
+  // Set opacity (default 100)
+  ctx.globalAlpha = (config.opacity ?? 100) / 100;
+
   // Calculate grid dimensions
   const totalSize = config.size + config.spacing;
   const cols = Math.ceil(width / totalSize) + 1;
@@ -48,6 +51,9 @@ export function drawGeometricPattern(
       ctx.restore();
     }
   }
+
+  // Reset global alpha
+  ctx.globalAlpha = 1.0;
 }
 
 function drawCircle(ctx: CanvasRenderingContext2D, size: number) {

@@ -27,6 +27,9 @@ function drawGridDots(
   height: number,
   config: DotsPatternConfig
 ) {
+  // Set opacity (default 100)
+  ctx.globalAlpha = (config.opacity ?? 100) / 100;
+
   // Calculate spacing based on density
   const spacing = Math.max(config.dotSize * 2, config.dotSize / config.density);
   const cols = Math.ceil(width / spacing);
@@ -50,6 +53,9 @@ function drawGridDots(
       ctx.fill();
     }
   }
+
+  // Reset global alpha
+  ctx.globalAlpha = 1.0;
 }
 
 function drawRandomDots(
@@ -58,6 +64,9 @@ function drawRandomDots(
   height: number,
   config: DotsPatternConfig
 ) {
+  // Set opacity (default 100)
+  ctx.globalAlpha = (config.opacity ?? 100) / 100;
+
   // Calculate number of dots based on density
   const area = width * height;
   const dotArea = Math.PI * Math.pow(config.dotSize / 2, 2);
@@ -83,4 +92,7 @@ function drawRandomDots(
     ctx.arc(dot.x, dot.y, dot.size / 2, 0, Math.PI * 2);
     ctx.fill();
   });
+
+  // Reset global alpha
+  ctx.globalAlpha = 1.0;
 }

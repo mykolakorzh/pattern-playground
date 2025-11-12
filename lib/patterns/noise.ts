@@ -24,6 +24,7 @@ export function drawNoisePattern(
   // Generate noise based on scale
   const scale = config.scale;
   const intensity = config.intensity / 100;
+  const opacity = (config.opacity ?? 100) / 100;
 
   for (let y = 0; y < height; y += scale) {
     for (let x = 0; x < width; x += scale) {
@@ -37,9 +38,13 @@ export function drawNoisePattern(
           const index = ((y + dy) * width + (x + dx)) * 4;
 
           // Blend noise with tint color
-          data[index] = Math.min(255, data[index] + (tintColor.r * noise + noiseValue - 128));
-          data[index + 1] = Math.min(255, data[index + 1] + (tintColor.g * noise + noiseValue - 128));
-          data[index + 2] = Math.min(255, data[index + 2] + (tintColor.b * noise + noiseValue - 128));
+          const noiseR = (tintColor.r * noise + noiseValue - 128) * opacity;
+          const noiseG = (tintColor.g * noise + noiseValue - 128) * opacity;
+          const noiseB = (tintColor.b * noise + noiseValue - 128) * opacity;
+
+          data[index] = Math.min(255, data[index] + noiseR);
+          data[index + 1] = Math.min(255, data[index + 1] + noiseG);
+          data[index + 2] = Math.min(255, data[index + 2] + noiseB);
           data[index + 3] = 255; // Alpha
         }
       }

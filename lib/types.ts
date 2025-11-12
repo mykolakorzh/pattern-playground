@@ -10,6 +10,7 @@ export type DotsStyle = 'grid' | 'random';
 // Base pattern config
 export interface BasePatternConfig {
   backgroundColor: string;
+  opacity?: number; // 0-100, pattern opacity
 }
 
 // Geometric pattern configuration
