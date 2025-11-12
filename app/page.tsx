@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { PatternType, PatternConfig } from "@/lib/types";
 import { PatternCanvas } from "@/components/pattern-playground/PatternCanvas";
 import { ControlPanel } from "@/components/pattern-playground/ControlPanel";
@@ -11,7 +11,6 @@ import { GeometricPatternConfig, DotsPatternConfig } from "@/lib/types";
 export default function Home() {
   const [patternType, setPatternType] = useState<PatternType>('geometric');
   const [config, setConfig] = useState<PatternConfig>(defaultGeometricConfig);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Handle PNG export
   const handleExportPNG = () => {

@@ -43,7 +43,7 @@ function drawGridDots(
 
       // Alternate between colors if accent color is provided
       const useAccent = config.accentColor && (row + col) % 3 === 0;
-      ctx.fillStyle = useAccent ? config.accentColor : config.dotColor;
+      ctx.fillStyle = (useAccent && config.accentColor) ? config.accentColor : config.dotColor;
 
       ctx.beginPath();
       ctx.arc(x, y, dotSize / 2, 0, Math.PI * 2);
@@ -71,7 +71,7 @@ function drawRandomDots(
     const y = Math.random() * height;
     const variation = 1 - (config.sizeVariation / 100) + (Math.random() * config.sizeVariation / 100);
     const size = config.dotSize * variation;
-    const useAccent = config.accentColor && Math.random() > 0.7;
+    const useAccent = Boolean(config.accentColor && Math.random() > 0.7);
 
     dots.push({ x, y, size, useAccent });
   }
