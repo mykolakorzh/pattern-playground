@@ -1,0 +1,51 @@
+// Pattern types
+export type PatternType = 'geometric' | 'dots' | 'noise';
+
+// Shape types for geometric patterns
+export type ShapeType = 'circle' | 'square' | 'triangle';
+
+// Dots pattern style
+export type DotsStyle = 'grid' | 'random';
+
+// Base pattern config
+export interface BasePatternConfig {
+  backgroundColor: string;
+}
+
+// Geometric pattern configuration
+export interface GeometricPatternConfig extends BasePatternConfig {
+  shape: ShapeType;
+  size: number;
+  spacing: number;
+  rotation: number;
+  shapeColor: string;
+}
+
+// Dots pattern configuration
+export interface DotsPatternConfig extends BasePatternConfig {
+  dotSize: number;
+  density: number;
+  sizeVariation: number;
+  style: DotsStyle;
+  dotColor: string;
+  accentColor?: string;
+}
+
+// Noise/Grain pattern configuration
+export interface NoisePatternConfig extends BasePatternConfig {
+  intensity: number;
+  scale: number;
+  colorTint: string;
+}
+
+// Union type for all pattern configs
+export type PatternConfig =
+  | GeometricPatternConfig
+  | DotsPatternConfig
+  | NoisePatternConfig;
+
+// Preset type
+export interface PatternPreset {
+  name: string;
+  config: PatternConfig;
+}
