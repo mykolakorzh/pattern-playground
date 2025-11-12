@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { PatternType, PatternConfig, GeometricPatternConfig, DotsPatternConfig, NoisePatternConfig } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -9,7 +10,7 @@ import { GeometricControls } from "./GeometricControls";
 import { DotsControls } from "./DotsControls";
 import { NoiseControls } from "./NoiseControls";
 import { geometricPresets, dotsPresets, noisePresets, defaultGeometricConfig, defaultDotsConfig, defaultNoiseConfig } from "@/lib/presets";
-import { Shuffle, Download } from "lucide-react";
+import { Shuffle, Download, Copy, Share2 } from "lucide-react";
 import type { ExportSize } from "@/app/page";
 
 interface ControlPanelProps {
@@ -19,6 +20,8 @@ interface ControlPanelProps {
   onConfigChange: (config: PatternConfig) => void;
   onExportPNG: () => void;
   onExportSVG: () => void;
+  onCopyToClipboard: () => void;
+  onShareURL: () => void;
   exportSize: ExportSize;
   onExportSizeChange: (size: ExportSize) => void;
 }
@@ -30,6 +33,8 @@ export function ControlPanel({
   onConfigChange,
   onExportPNG,
   onExportSVG,
+  onCopyToClipboard,
+  onShareURL,
   exportSize,
   onExportSizeChange,
 }: ControlPanelProps) {
@@ -83,6 +88,7 @@ export function ControlPanel({
         });
         break;
     }
+    toast.success('Pattern randomized!');
   };
 
   const getPresets = () => {
@@ -178,7 +184,10 @@ export function ControlPanel({
               <Button
                 key={index}
                 variant="outline"
-                onClick={() => onConfigChange(preset.config)}
+                onClick={() => {
+                  onConfigChange(preset.config);
+                  toast.success(`Preset "${preset.name}" applied!`);
+                }}
                 className="w-full justify-start text-sm"
               >
                 {preset.name}
@@ -240,6 +249,26 @@ export function ControlPanel({
                   SVG export not available for this pattern
                 </p>
               )}
+
+              {/* Quick Actions */}
+              <div className="pt-2 space-y-2 border-t border-gray-100">
+                <Button
+                  onClick={onCopyToClipboard}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copy to Clipboard
+                </Button>
+                <Button
+                  onClick={onShareURL}
+                  variant="secondary"
+                  className="w-full"
+                >
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share Link
+                </Button>
+              </div>
             </div>
           </div>
         </div>

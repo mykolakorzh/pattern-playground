@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { PatternType, PatternConfig } from "@/lib/types";
 import { renderPattern } from "@/lib/patterns";
 
@@ -14,41 +14,40 @@ interface PatternCanvasProps {
 /**
  * Canvas component that renders patterns in real-time
  * Updates automatically when pattern type or config changes
+ * Exposes canvas ref for external access (e.g., copy to clipboard)
  */
-export function PatternCanvas({
-  patternType,
-  config,
-  width = 800,
-  height = 800,
-}: PatternCanvasProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export const PatternCanvas = forwardRef<HTMLCanvasElement, PatternCanvasProps>(
+  function PatternCanvas(
+    { patternType, config, width = 800, height = 800 },
+    forwardedRef
+  ) {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    // Expose the canvas element to parent via ref
+    useImperativeHandle(forwardedRef, () => canvasRef.current!);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    useEffect(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    // Render pattern
-    renderPattern(ctx, width, height, patternType, config);
-  }, [patternType, config, width, height]);
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-      className="border border-gray-300 rounded-lg shadow-lg bg-white w-full h-auto max-w-full"
-      style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
-    />
-  );
-}
+      // Render pattern
+      renderPattern(ctx, width, height, patternType, config);
+    }, [patternType, config, width, height]);
 
-// Export function to get canvas element (for exporting)
-export function usePatternCanvas(canvasRef: React.RefObject<HTMLCanvasElement>) {
-  return canvasRef.current;
-}
+    return (
+      <canvas
+        ref={canvasRef}
+        width={width}
+        height={height}
+        className="border border-gray-300 rounded-lg shadow-lg bg-white w-full h-auto max-w-full"
+        style={{ maxWidth: `${width}px`, maxHeight: `${height}px` }}
+      />
+    );
+  }
+);
