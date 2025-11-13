@@ -37,6 +37,7 @@ export default function Home() {
   });
 
   const [exportSize, setExportSize] = useState<ExportSize>(1024);
+  const [showTiling, setShowTiling] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Local state for pattern name input (not tracked in history until blur)
@@ -172,6 +173,51 @@ export default function Home() {
       toast.error('Failed to export PNG. Please try again.', { id: 'export-png' });
     }
   }, [exportSize, patternType, config, patternName]);
+
+  // Handle CSS export
+  const handleExportCSS = useCallback(() => {
+    try {
+      if (!canvasRef.current) {
+        throw new Error('Canvas not available');
+      }
+
+      toast.loading('Generating CSS...', { id: 'export-css' });
+
+      // Convert canvas to data URL
+      const dataURL = canvasRef.current.toDataURL('image/png');
+
+      // Generate CSS code
+      const cssCode = `.pattern-background {
+  background-image: url('${dataURL}');
+  background-repeat: repeat;
+  background-size: 400px 400px; /* Adjust as needed */
+}
+
+/* Alternative: Cover mode */
+.pattern-cover {
+  background-image: url('${dataURL}');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}`;
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(cssCode).then(() => {
+        toast.success('CSS code copied to clipboard!', { id: 'export-css', duration: 4000 });
+      }).catch(() => {
+        throw new Error('Failed to copy CSS');
+      });
+    } catch (error) {
+      console.error('CSS export failed:', error);
+      toast.error('Failed to export CSS code', { id: 'export-css' });
+    }
+  }, []);
+
+  // Toggle tiling preview
+  const handleToggleTiling = useCallback(() => {
+    setShowTiling(prev => !prev);
+    toast.success(showTiling ? 'Tiling preview hidden' : 'Tiling preview enabled');
+  }, [showTiling]);
 
   // Handle SVG export
   const handleExportSVG = useCallback(() => {
@@ -331,19 +377,39 @@ export default function Home() {
               onShareURL={handleShareURL}
               exportSize={exportSize}
               onExportSizeChange={setExportSize}
+              onToggleTiling={handleToggleTiling}
+              showTiling={showTiling}
+              onExportCSS={handleExportCSS}
             />
           </div>
 
           {/* Canvas Area - Optimized Container */}
           <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10 overflow-auto scrollbar-modern order-1 lg:order-2 min-h-[300px] sm:min-h-[400px] lg:min-h-0">
             <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-modern-xl p-4 sm:p-5 md:p-6 w-full max-w-3xl border border-gray-200/50 transition-all duration-300 hover:shadow-2xl hover:border-blue-200/60 group">
-              <PatternCanvas
-                ref={canvasRef}
-                patternType={patternType}
-                config={config}
-                width={800}
-                height={800}
-              />
+              {showTiling ? (
+                /* Tiling Preview - 2x2 Grid */
+                <div className="grid grid-cols-2 gap-0 w-full aspect-square">
+                  {[0, 1, 2, 3].map((index) => (
+                    <div key={index} className="overflow-hidden">
+                      <PatternCanvas
+                        patternType={patternType}
+                        config={config}
+                        width={400}
+                        height={400}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Single Canvas */
+                <PatternCanvas
+                  ref={canvasRef}
+                  patternType={patternType}
+                  config={config}
+                  width={800}
+                  height={800}
+                />
+              )}
             </div>
           </div>
         </div>

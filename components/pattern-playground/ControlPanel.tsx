@@ -10,8 +10,10 @@ import { GeometricControls } from "./GeometricControls";
 import { DotsControls } from "./DotsControls";
 import { NoiseControls } from "./NoiseControls";
 import { PresetThumbnail } from "./PresetThumbnail";
+import { ColorPaletteSelector } from "./ColorPaletteSelector";
 import { geometricPresets, dotsPresets, noisePresets, defaultGeometricConfig, defaultDotsConfig, defaultNoiseConfig } from "@/lib/presets";
-import { Shuffle, Download, Copy, Share2 } from "lucide-react";
+import { colorPalettes, type ColorPalette } from "@/lib/colorPalettes";
+import { Shuffle, Download, Copy, Share2, Grid3x3, Code2, Palette } from "lucide-react";
 import type { ExportSize } from "@/app/page";
 
 interface ControlPanelProps {
@@ -25,6 +27,9 @@ interface ControlPanelProps {
   onShareURL: () => void;
   exportSize: ExportSize;
   onExportSizeChange: (size: ExportSize) => void;
+  onToggleTiling?: () => void;
+  showTiling?: boolean;
+  onExportCSS?: () => void;
 }
 
 export function ControlPanel({
@@ -38,7 +43,35 @@ export function ControlPanel({
   onShareURL,
   exportSize,
   onExportSizeChange,
+  onToggleTiling,
+  showTiling,
+  onExportCSS,
 }: ControlPanelProps) {
+  const [showPaletteSelector, setShowPaletteSelector] = useState(false);
+
+  const handleApplyPalette = (palette: ColorPalette) => {
+    const updatedConfig = { ...config };
+
+    // Apply colors based on pattern type
+    if (patternType === 'geometric') {
+      const gConfig = updatedConfig as GeometricPatternConfig;
+      gConfig.shapeColor = palette.colors.primary;
+      gConfig.backgroundColor = palette.colors.background;
+    } else if (patternType === 'dots') {
+      const dConfig = updatedConfig as DotsPatternConfig;
+      dConfig.dotColor = palette.colors.primary;
+      dConfig.accentColor = palette.colors.accent;
+      dConfig.backgroundColor = palette.colors.background;
+    } else if (patternType === 'noise') {
+      const nConfig = updatedConfig as NoisePatternConfig;
+      nConfig.colorTint = palette.colors.primary;
+      nConfig.backgroundColor = palette.colors.background;
+    }
+
+    onConfigChange(updatedConfig);
+    toast.success(`"${palette.name}" palette applied!`);
+  };
+
   const handlePatternTypeChange = (type: PatternType) => {
     onPatternTypeChange(type);
     // Set default config for new pattern type
@@ -179,6 +212,31 @@ export function ControlPanel({
           )}
         </div>
 
+        {/* Divider */}
+        <div className="border-t border-gray-200/60" />
+
+        {/* Color Palette Section */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2 tracking-tight">
+              <span className="h-5 w-1 bg-gradient-to-b from-violet-500 to-purple-600 rounded-full shadow-sm"></span>
+              Color Palettes
+            </h2>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowPaletteSelector(!showPaletteSelector)}
+              className="h-7 px-2 text-xs font-bold hover:bg-purple-50"
+            >
+              <Palette className="h-3.5 w-3.5 mr-1" />
+              {showPaletteSelector ? 'Hide' : 'Show'}
+            </Button>
+          </div>
+          {showPaletteSelector && (
+            <ColorPaletteSelector onSelectPalette={handleApplyPalette} />
+          )}
+        </div>
+
         {/* Randomize Button - Mobile Optimized */}
         <Button
           variant="outline"
@@ -301,6 +359,36 @@ export function ControlPanel({
                   <Share2 className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform text-teal-600" />
                   <span className="font-bold text-gray-700 group-hover:text-teal-700">Share Link</span>
                 </Button>
+
+                {/* Advanced Actions */}
+                <div className="pt-2 space-y-2 border-t border-gray-200/40">
+                  {onToggleTiling && (
+                    <Button
+                      onClick={onToggleTiling}
+                      variant="secondary"
+                      className={`w-full group border-2 transition-all duration-300 shadow-sm hover:shadow-md min-h-[44px] text-sm sm:text-base ${
+                        showTiling
+                          ? 'bg-gradient-to-br from-purple-50 to-pink-50 border-purple-300 hover:border-purple-400'
+                          : 'bg-gradient-to-br from-slate-50 to-gray-50 border-gray-200/60 hover:border-gray-300'
+                      } active:scale-[0.98]`}
+                    >
+                      <Grid3x3 className={`mr-2 h-4 w-4 group-hover:scale-110 transition-transform ${showTiling ? 'text-purple-600' : 'text-gray-600'}`} />
+                      <span className={`font-bold ${showTiling ? 'text-purple-700' : 'text-gray-700'}`}>
+                        {showTiling ? 'Hide' : 'Show'} Tiling Preview
+                      </span>
+                    </Button>
+                  )}
+                  {onExportCSS && (
+                    <Button
+                      onClick={onExportCSS}
+                      variant="secondary"
+                      className="w-full group bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 hover:from-amber-100 hover:via-orange-100 hover:to-yellow-100 active:scale-[0.98] border-2 border-orange-200/60 hover:border-orange-300 transition-all duration-300 shadow-sm hover:shadow-md min-h-[44px] text-sm sm:text-base"
+                    >
+                      <Code2 className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform text-orange-600" />
+                      <span className="font-bold text-gray-700 group-hover:text-orange-700">Export CSS Code</span>
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
