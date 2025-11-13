@@ -2,7 +2,7 @@
 export type PatternType = 'geometric' | 'dots' | 'noise';
 
 // Shape types for geometric patterns
-export type ShapeType = 'circle' | 'square' | 'triangle';
+export type ShapeType = 'circle' | 'square' | 'triangle' | 'hexagon' | 'star' | 'diamond' | 'pentagon';
 
 // Dots pattern style
 export type DotsStyle = 'grid' | 'random';
@@ -20,6 +20,8 @@ export interface GeometricPatternConfig extends BasePatternConfig {
   spacing: number;
   rotation: number;
   shapeColor: string;
+  sizeVariation?: number; // 0-100, random size variation percentage
+  colorVariation?: boolean; // Enable random color variations
 }
 
 // Dots pattern configuration

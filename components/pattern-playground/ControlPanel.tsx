@@ -152,7 +152,7 @@ export function ControlPanel({
               onClick={() => handlePatternTypeChange('geometric')}
               className={`text-xs sm:text-sm font-bold transition-all duration-300 min-h-[44px] rounded-lg ${
                 patternType === 'geometric'
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700 scale-105'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700'
                   : 'hover:bg-white/80 active:bg-white text-gray-700'
               }`}
             >
@@ -163,7 +163,7 @@ export function ControlPanel({
               onClick={() => handlePatternTypeChange('dots')}
               className={`text-xs sm:text-sm font-bold transition-all duration-300 min-h-[44px] rounded-lg ${
                 patternType === 'dots'
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700 scale-105'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700'
                   : 'hover:bg-white/80 active:bg-white text-gray-700'
               }`}
             >
@@ -174,7 +174,7 @@ export function ControlPanel({
               onClick={() => handlePatternTypeChange('noise')}
               className={`text-xs sm:text-sm font-bold transition-all duration-300 min-h-[44px] rounded-lg ${
                 patternType === 'noise'
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700 scale-105'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md text-white hover:from-blue-600 hover:to-indigo-700'
                   : 'hover:bg-white/80 active:bg-white text-gray-700'
               }`}
             >
